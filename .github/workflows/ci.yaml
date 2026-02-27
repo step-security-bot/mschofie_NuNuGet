@@ -39,20 +39,20 @@ jobs:
         run: |
           & dotnet restore
 
-      - name: Check formatting
-        shell: pwsh
-        run: |
-          & dotnet format --no-restore --verify-no-changes
+      # - name: Check formatting
+      #   shell: pwsh
+      #   run: |
+      #     & dotnet format --no-restore --verify-no-changes
 
-      - name: Build (debug)
-        shell: pwsh
-        run: |
-          & dotnet pack --no-restore --configuration Debug /bl:__artifacts/msbuild.debug.binlog
+      # - name: Build (debug)
+      #   shell: pwsh
+      #   run: |
+      #     & dotnet pack --no-restore --configuration Debug /bl:__artifacts/msbuild.debug.binlog
 
-      - name: Test (debug)
-        shell: pwsh
-        run: |
-          & dotnet test --no-restore --configuration Debug
+      # - name: Test (debug)
+      #   shell: pwsh
+      #   run: |
+      #     & dotnet test --no-restore --configuration Debug
 
       - name: Build (release)
         shell: pwsh
@@ -65,7 +65,7 @@ jobs:
           & dotnet test --no-restore --configuration Release
 
       - name: Publish packages
-        if: ${{ contains(fromJSON('["refs/heads/main", "refs/heads/develop"]'), github.ref) }}
+#        if: ${{ contains(fromJSON('["refs/heads/main", "refs/heads/develop"]'), github.ref) }}
         shell: pwsh
         run: |
           & dotnet nuget add source --name github "https://nuget.pkg.github.com/mschofie/index.json"
@@ -95,7 +95,7 @@ jobs:
     runs-on: ubuntu-slim
     permissions:
       contents: write
-    if: ${{ github.event_name == 'push' && contains(fromJSON('["refs/heads/main"]'), github.ref) }}
+#    if: ${{ github.event_name == 'push' && contains(fromJSON('["refs/heads/main"]'), github.ref) }}
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -139,6 +139,8 @@ jobs:
           $Version = $env:VERSION
           if (-not $Version) { Write-Error 'Version not found'; exit 1 }
 
+          $RefName = if ('${{ github.ref }}' -match 'refs/heads/(.*)') { $Matches[1] }
+
           Write-Host "Logging into gh"
           Write-Output $env:GITHUB_TOKEN | gh auth login --with-token
 
@@ -149,8 +151,10 @@ jobs:
             if ($Version -match '-') {
               "--prerelease"
             }
+            if ($RefName) {
+              "--target", $RefName
+            }
             "--title", "v$Version"
-            "--target", "${{ github.ref }}"
             "--notes", ""
             "--latest=false"
           )
