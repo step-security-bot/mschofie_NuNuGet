@@ -150,6 +150,7 @@ jobs:
               "--prerelease"
             }
             "--title", "v$Version"
+            "--target", "${{ github.ref }}"
             "--notes", ""
             "--latest=false"
           )
