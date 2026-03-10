@@ -23,16 +23,13 @@ internal sealed class ProcessManagement
 
     public IDictionary<string, string?> EnvironmentVariables { get; } = new Dictionary<string, string?>(StringComparer.OrdinalIgnoreCase);
 
-    public ProcessManagement()
-    {
-    }
-
     /// <summary>
     /// Runs a process with the given arguments.
     /// </summary>
     /// <param name="exePath">Executable path</param>
     /// <param name="arguments">Process arguments</param>
     /// <returns>The result of the process execution.</returns>
+    /// <exception cref="TimeoutException">Thrown when the process does not exit within the configured <see cref="Timeout"/>.</exception>
     public ProcessResult Run(string exePath, string arguments)
     {
         ProcessStartInfo startInfo = new(exePath)

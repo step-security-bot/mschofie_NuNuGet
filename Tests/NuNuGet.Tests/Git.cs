@@ -17,7 +17,7 @@ public static class Git
             WorkingDirectory = fromPath,
         };
 
-        ProcessResult result = processManagement.Run("git", $"rev-parse --show-toplevel");
+        ProcessResult result = processManagement.Run("git", "rev-parse --show-toplevel");
 
         if (result.ExitCode != 0)
         {

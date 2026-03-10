@@ -45,6 +45,4 @@ internal sealed class PackageList
 [JsonSerializable(typeof(PackageList))]
 [JsonSerializable(typeof(PackageEntry))]
 [JsonSerializable(typeof(IReadOnlyList<PackageEntry>))]
-internal partial class PackageListJsonContext : JsonSerializerContext
-{
-}
+internal partial class PackageListJsonContext : JsonSerializerContext;

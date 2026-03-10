@@ -33,6 +33,7 @@ jobs:
           lfs: false
           fetch-depth: 0
           filter: blob:none
+          persist-credentials: false
 
       - name: Machine Setup
         uses: ./.github/actions/machine-setup

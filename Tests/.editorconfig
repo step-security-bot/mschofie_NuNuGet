@@ -6,3 +6,9 @@ root = false
 # CA1707: Identifiers should not contain underscores
 # Allow underscores in test method names for readability
 dotnet_diagnostic.CA1707.severity = none
+
+# S1199: Allow nested code blocks for test step organization (Arrange/Act/Assert phases)
+dotnet_diagnostic.S1199.severity = suggestion
+
+# S125: Allow commented-out code in tests (may contain reference examples)
+dotnet_diagnostic.S125.severity = suggestion

@@ -23,10 +23,18 @@ internal static class Traversal
     /// <exception cref="InvalidOperationException">Thrown if the lock file is not a single-target lock file.</exception>
     public static IEnumerable<(string, NuGetVersion)> ReverseTopological(PackagesLockFile packagesLockFile)
     {
+        ArgumentNullException.ThrowIfNull(packagesLockFile);
+
         if (packagesLockFile.Targets.Count != 1)
         {
             throw new InvalidOperationException("Only single-target lock files are supported.");
         }
+
+        return ReverseTopologicalIterator(packagesLockFile);
+    }
+
+    private static IEnumerable<(string, NuGetVersion)> ReverseTopologicalIterator(PackagesLockFile packagesLockFile)
+    {
 
         // Build an index mapping packageId to it's entry in the lock file.
         //

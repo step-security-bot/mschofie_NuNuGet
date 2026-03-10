@@ -94,6 +94,9 @@ dotnet_diagnostic.IDE0160.severity = warning
 dotnet_diagnostic.IDE0161.severity = warning
 dotnet_diagnostic.xUnit2001.severity = warning
 
+# Suppress unused parameter warning for lambda callbacks where the signature is required
+dotnet_diagnostic.RCS1163.severity = suggestion
+
 [*.{cs,vb}]
 indent_size = 4
 tab_width = 4

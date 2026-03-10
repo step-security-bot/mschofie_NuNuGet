@@ -76,7 +76,7 @@ internal sealed class NuGetExeCli : INuGetCli
 /// Implements <see cref="INuGetCli"/> by directly extracting the <c>.nupkg</c> zip archive
 /// and writing the required metadata files, without depending on <c>nuget.exe</c>.
 /// </summary>
-internal sealed partial class NuGetZipCli : INuGetCli
+internal sealed class NuGetZipCli : INuGetCli
 {
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.General) { WriteIndented = true };
 

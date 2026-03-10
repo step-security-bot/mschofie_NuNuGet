@@ -45,7 +45,7 @@ internal sealed class InstallCommand : Command
 
     private string LockFile { get; set; } = string.Empty;
 
-    private string ProjectName { get; set; } = "NuNuGet";
+    private string ProjectName { get; } = "NuNuGet";
 
     /// <summary>
     /// Initializes a new instance of the <see cref="InstallCommand"/> class.
@@ -138,13 +138,11 @@ internal sealed class InstallCommand : Command
         {
             FileInfo existingLockFile = new FileInfo(this.LockFile);
 
-            if (existingLockFile.Length == newLockFileContent.Length)
+            if (existingLockFile.Length == newLockFileContent.Length
+                && newLockFileContent == File.ReadAllText(this.LockFile))
             {
-                if (newLockFileContent == File.ReadAllText(this.LockFile))
-                {
-                    // Nothing has changed, no need to update the lock file on disk.
-                    return;
-                }
+                // Nothing has changed, no need to update the lock file on disk.
+                return;
             }
         }
 
@@ -205,7 +203,7 @@ internal sealed class InstallCommand : Command
             bool staleLockFile = result.LogMessages.Any(m => m.Code == NuGetLogCode.NU1004);
             if (staleLockFile)
             {
-                Console.Error.WriteLine("Restore failed due to a mismatch between the package list and the lock file. Delete the lock file to force a rebuild.");
+                await Console.Error.WriteLineAsync("Restore failed due to a mismatch between the package list and the lock file. Delete the lock file to force a rebuild.");
                 return 100;
             }
 
@@ -215,7 +213,7 @@ internal sealed class InstallCommand : Command
         // Write warnings to Console.Error
         foreach (var warning in result.LogMessages.Where(m => m.Level == NuGet.Common.LogLevel.Warning))
         {
-            Console.Error.WriteLine(warning.Message);
+            await Console.Error.WriteLineAsync(warning.Message);
             // Look for audit errors?
         }
 

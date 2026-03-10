@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 /// <summary>
 /// Adapts an <see cref="ILogger"/> to the <see cref="NuGet.Common.ILogger"/> interface.
 /// </summary>
-/// <param name="logger"></param>
+/// <param name="logger">The <see cref="ILogger"/> instance to wrap.</param>
 internal sealed class NuGetLoggerAdapter(ILogger logger) : NuGet.Common.ILogger
 {
     private static readonly Action<ILogger, string, Exception?> logDebug = LoggerMessage.Define<string>(LogLevel.Debug, new EventId(0, nameof(logDebug)), "{Data}");
@@ -55,8 +55,6 @@ internal sealed class NuGetLoggerAdapter(ILogger logger) : NuGet.Common.ILogger
                 NuGetLoggerAdapter.logVerbose(this.logger, data, null);
                 break;
             case NuGet.Common.LogLevel.Information:
-                NuGetLoggerAdapter.logInformation(this.logger, data, null);
-                break;
             case NuGet.Common.LogLevel.Minimal:
                 NuGetLoggerAdapter.logInformation(this.logger, data, null);
                 break;
@@ -72,16 +70,16 @@ internal sealed class NuGetLoggerAdapter(ILogger logger) : NuGet.Common.ILogger
     }
 
     /// <inheritdoc/>
+    public void Log(NuGet.Common.ILogMessage message)
+    {
+        this.Log(message.Level, message.Message);
+    }
+
+    /// <inheritdoc/>
     public Task LogAsync(NuGet.Common.LogLevel level, string data)
     {
         this.Log(level, data);
         return Task.CompletedTask;
-    }
-
-    /// <inheritdoc/>
-    public void Log(NuGet.Common.ILogMessage message)
-    {
-        this.Log(message.Level, message.Message);
     }
 
     /// <inheritdoc/>
